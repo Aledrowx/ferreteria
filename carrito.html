@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Carrito | FerreteriaFX</title>
+    <link rel="stylesheet" href="carrito.css">
+</head>
+<body>
+
+    <header class="navbar">
+    <div class="nav-content">
+        <div class="logo">
+            <a href="index.html">
+                <img src="logocentral2.png" alt="Logo FerreteriaFX">
+            </a>
+        </div>
+
+        <div class="search-container">
+            <input type="text" placeholder="Buscar...">
+            <button class="search-btn">🔍</button>
+        </div>
+
+        <div class="icons">
+            <span class="icon">👤</span>
+            <span class="icon cart-icon" style="cursor: pointer;">🛒</span>
+        </div>
+    </div>
+    </header>
+
+    <main class="categoria">
+        <h1>Carrito</h1> <div class="productos">
+            <table id="tabla-carrito" style="width: 100%; border-collapse: collapse; background: white;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #ddd;">
+                        <th style="padding: 15px; text-align: left;">Producto</th>
+                        <th style="padding: 15px; text-align: left;">Precio</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-carrito">
+                    </tbody>
+            </table>
+        </div>
+
+        <h2 id="total-final" style="margin-top: 20px;">Total: S/. 0.00</h2>
+        <button onclick="vaciarCarrito()" style="padding: 10px; cursor: pointer;">Vaciar Carrito</button>
+    </main>
+
+    <script>
+        // Cargar los productos guardados en la memoria del navegador
+        function cargarCarrito() {
+            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            const lista = document.getElementById('lista-carrito');
+            const totalElemento = document.getElementById('total-final');
+            let total = 0;
+
+            lista.innerHTML = ""; // Limpiar antes de renderizar
+
+            carrito.forEach(prod => {
+                lista.innerHTML += `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 15px;">
+                            <img src="${prod.imagen}" width="60" style="vertical-align: middle; margin-right: 10px;">
+                            ${prod.nombre}
+                        </td>
+                        <td style="padding: 15px;">${prod.precioTexto}</td>
+                    </tr>`;
+                total += prod.precioNum;
+            });
+            totalElemento.innerText = "Total: S/. " + total.toFixed(2);
+        }
+
+        function vaciarCarrito() {
+            localStorage.removeItem('carrito');
+            location.reload();
+        }
+
+        // Ejecutar al cargar la página
+        cargarCarrito();
+    </script>
+</body>
+</html>

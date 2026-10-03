@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atornilladores | FerreteriaFX</title>
+    <link rel="stylesheet" href="atornilladores.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">
+            <a href="../index.html">
+                <img src="../logocentral2.png" alt="Logo FerreteriaFX">
+            </a>
+        </div>
+
+        <div class="search-container">
+            <input type="text" placeholder="Buscar...">
+            <button class="search-btn">🔍</button>
+        </div>
+
+        <div class="icons">
+            <span class="icon">👤</span>
+            <span class="icon cart-icon" style="cursor: pointer;">🛒</span>
+        </div>
+    </header>
+
+    <main class="categoria">
+        <h1>Atornilladores</h1>
+
+        <div class="top-bar">
+            <div class="count">Mostrando 1 - 8 productos</div>
+            <div class="filter">
+                <select id="filtro-precio">
+                    <option value="default" disabled selected>Ordenar por precio</option>
+                    <option value="min">Precio menor a mayor</option>
+                    <option value="max">Precio mayor a menor</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="productos">
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/products/ator_20v_cr_700x.png?v=1637527700" alt="Atornillador Crown 20V">
+                <h3>Atornillador Inalambrico con Percutor Crown 20V MAX 4Amp + 2 baterías</h3>
+                <p class="precio">S/. 679.90</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/products/CT21056-2_700x.png?v=1613061994" alt="Atornillador Crown 18V">
+                <h3>Atornillador Inalambrico Crown 18V + 2 baterías</h3>
+                <p class="precio">S/. 429.90</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/products/CT21055-2_600x.png?v=1613061928" alt="Atornillador Crown 14.4V">
+                <h3>Atornillador Inalambrico Crown 14,4V + 2 baterías</h3>
+                <p class="precio">S/. 230.00</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/products/imagen_2021-08-25_213754_600x.png?v=1629945476" alt="Atornillador Crown 12V">
+                <h3>Atornillador Inalambrico Crown 12V + 2 baterías</h3>
+                <p class="precio">S/. 269.90</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/products/nor_2_400x.png?v=1630812410" alt="Taladro Atornillador 22V">
+                <h3>Taladro Atornillador Inalámbrico 22v + 2 Baterías + Accesorios</h3>
+                <p class="precio">S/. 179.90</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/products/imagen_2021-08-26_155631_600x.png?v=1630011394" alt="Kit Taladro + Atornillador">
+                <h3>Taladro Percutor + Atornillador Impacto 20v</h3>
+                <p class="precio">S/. 1,099.90</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/products/nor_6_376x.png?v=1630811909" alt="Atornillador 12V Maleta">
+                <h3>Taladro Atornillador Inalámbrico 12v + 2 Baterías + Maleta</h3>
+                <p class="precio">S/. 129.90</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/files/ABS-14.4_600x.jpg?v=1729363394" alt="Atornillador DWT 14.4V">
+                <h3>Atornillador Inalámbrico DWT 14.4V</h3>
+                <p class="precio">S/. 169.90</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- LÓGICA DEL CARRITO ---
+        const botones = document.querySelectorAll('.btn-add');
+        
+        botones.forEach(boton => {
+            boton.addEventListener('click', (e) => {
+                const card = e.target.parentElement;
+                const producto = {
+                    nombre: card.querySelector('h3').innerText,
+                    precioTexto: card.querySelector('.precio').innerText,
+                    precioNum: parseFloat(card.querySelector('.precio').innerText.replace('S/. ', '').replace(',', '')),
+                    imagen: card.querySelector('img').src
+                };
+
+                let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+                carrito.push(producto);
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                
+                boton.innerText = "¡Agregado!";
+                setTimeout(() => boton.innerText = "Añadir al carrito", 1000);
+            });
+        });
+
+        document.querySelector('.cart-icon').addEventListener('click', () => {
+            window.location.href = '../carrito.html';
+        });
+
+        // --- LÓGICA DEL FILTRO DE PRECIOS ---
+        const selectFiltro = document.getElementById('filtro-precio');
+        const contenedorProductos = document.querySelector('.productos');
+
+        selectFiltro.addEventListener('change', () => {
+            // Convertimos los nodos de productos a un Array para poder usar .sort()
+            const productosArray = Array.from(document.querySelectorAll('.producto'));
+            const opcion = selectFiltro.value;
+
+            productosArray.sort((a, b) => {
+                // Función auxiliar para limpiar el precio y convertirlo a número real
+                const obtenerPrecio = (el) => {
+                    const texto = el.querySelector('.precio').innerText;
+                    return parseFloat(texto.replace('S/. ', '').replace(',', ''));
+                };
+
+                const precioA = obtenerPrecio(a);
+                const precioB = obtenerPrecio(b);
+
+                if (opcion === 'min') {
+                    return precioA - precioB; // Orden ascendente
+                } else if (opcion === 'max') {
+                    return precioB - precioA; // Orden descendente
+                }
+                return 0;
+            });
+
+            // Reinsertamos los elementos en el orden correcto
+            // Al hacer appendChild de un elemento que ya existe, el DOM simplemente lo "mueve" de posición
+            productosArray.forEach(p => contenedorProductos.appendChild(p));
+        });
+    </script>
+</body>
+</html>

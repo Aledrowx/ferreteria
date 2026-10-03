@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hidrolavadoras | FerreteriaFX</title>
+    <link rel="stylesheet" href="hidrolavadora.css">
+</head>
+<body>
+
+     <header class="navbar">
+    <div class="logo">
+        <a href="../index.html">
+            <img src="../logocentral2.png" alt="Logo FerreteriaFX">
+        </a>
+    </div>
+
+        <div class="search-container">
+            <input type="text" placeholder="Buscar...">
+            <button class="search-btn">🔍</button>
+        </div>
+
+        <div class="icons">
+            <span class="icon">👤</span>
+            <span class="icon cart-icon" style="cursor: pointer;">🛒</span>
+        </div>
+    </header>
+
+    <main class="categoria">
+        <h1>Hidrolavadora</h1>
+
+        <div class="top-bar">
+            <div class="count">Mostrando 1 - 4 productos</div>
+            <div class="filter">
+                <select id="filtro-precio">
+                    <option value="default" disabled selected>Ordenar por precio</option>
+                    <option value="min">Precio menor a mayor</option>
+                    <option value="max">Precio mayor a menor</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="productos">
+
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/files/CT42068_318x.jpg?v=1696103993" alt="Hidrolavadora Crown 2500W">
+                <h3>Hidrolavadora Crown 2500W 195bar</h3>
+                <p class="precio">S/. 989.90</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/products/CT42024_500x.png?v=1613078435" alt="Hidrolavadora Crown 2000W">
+                <h3>Hidrolavadora Crown 2000W 150bar</h3>
+                <p class="precio">S/. 769.90</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/products/CT42022_500x.png?v=1613074219" alt="Hidrolavadora Crown 1800W">
+                <h3>Hidrolavadora Crown 1800W 140bar</h3>
+                <p class="precio">S/. 669.90</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/products/CT42020_500x.png?v=1613074062" alt="Hidrolavadora Crown 1400W">
+                <h3>Hidrolavadora Crown 1400W 100bar</h3>
+                <p class="precio">S/. 529.90</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // --- LÓGICA DEL CARRITO ---
+        const botones = document.querySelectorAll('.btn-add');
+        
+        botones.forEach(boton => {
+            boton.addEventListener('click', (e) => {
+                const card = e.target.parentElement;
+                const textoOriginal = card.querySelector('.precio').innerText;
+                
+                // Limpieza segura de precios (S/. y comas)
+                const precioLimpio = textoOriginal.replace('S/. ', '').replace(/,/g, '');
+
+                const producto = {
+                    nombre: card.querySelector('h3').innerText,
+                    precioTexto: textoOriginal,
+                    precioNum: parseFloat(precioLimpio),
+                    imagen: card.querySelector('img').src
+                };
+
+                let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+                carrito.push(producto);
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                
+                // Efecto visual
+                boton.innerText = "¡Agregado!";
+                setTimeout(() => boton.innerText = "Añadir al carrito", 1000);
+            });
+        });
+
+        // Evento para el icono del carrito
+        document.querySelector('.cart-icon').addEventListener('click', () => {
+            window.location.href = '../carrito.html';
+        });
+
+        // --- LÓGICA DE FILTRADO DE PRECIOS ---
+        const selectFiltro = document.getElementById('filtro-precio');
+        const contenedorProductos = document.querySelector('.productos');
+
+        if (selectFiltro && contenedorProductos) {
+            selectFiltro.addEventListener('change', () => {
+                const productosArray = Array.from(document.querySelectorAll('.producto'));
+                const opcion = selectFiltro.value;
+
+                productosArray.sort((a, b) => {
+                    const obtenerPrecio = (el) => {
+                        const texto = el.querySelector('.precio').innerText;
+                        // Limpieza segura de precios (S/. y comas)
+                        const textoLimpio = texto.replace('S/. ', '').replace(/,/g, '');
+                        return parseFloat(textoLimpio); 
+                    };
+
+                    const precioA = obtenerPrecio(a);
+                    const precioB = obtenerPrecio(b);
+
+                    if (opcion === 'min') {
+                        return precioA - precioB;
+                    } else if (opcion === 'max') {
+                        return precioB - precioA;
+                    }
+                    return 0;
+                });
+
+                productosArray.forEach(p => contenedorProductos.appendChild(p));
+            });
+        }
+    </script>
+</body>
+</html>

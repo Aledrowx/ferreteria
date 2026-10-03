@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sierras Circulares y Caladoras| FerreteriaFX</title>
+    <link rel="stylesheet" href="sierras.css">
+</head>
+<body>
+
+     <header class="navbar">
+    <div class="logo">
+        <a href="../index.html">
+            <img src="../logocentral2.png" alt="Logo FerreteriaFX">
+        </a>
+    </div>
+
+        <div class="search-container">
+            <input type="text" placeholder="Buscar...">
+            <button class="search-btn">🔍</button>
+        </div>
+
+        <div class="icons">
+            <span class="icon">👤</span>
+            <span class="icon cart-icon" style="cursor: pointer;">🛒</span>
+        </div>
+    </header>
+
+    <main class="categoria">
+        <h1>Sierras Circulares y Caladoras</h1>
+
+        <div class="top-bar">
+            <div class="count">Mostrando 1 - 7 productos</div>
+            <div class="filter">
+                <select id="filtro-precio">
+                    <option value="default" disabled selected>Ordenar por precio</option>
+                    <option value="min">Precio menor a mayor</option>
+                    <option value="max">Precio mayor a menor</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="productos">
+
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/files/sts06-85dv_600x.jpg?v=1729363615" alt="Sierra Caladora DWT">
+                <h3>Sierra Caladora DWT 650W</h3>
+                <p class="precio">S/. 149.90</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/products/imagen_2021-02-17_123258_500x.png?v=1613583183" alt="Sierra Caladora Crown">
+                <h3>Sierra Caladora Crown 500W</h3>
+                <p class="precio">S/. 179.90</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/products/CT15199-1_600x.png?v=1613069503" alt="Sierra Circular Crown">
+                <h3>Sierra Circular Crown 1400W</h3>
+                <p class="precio">S/. 249.90</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/products/CT15189-1_600x.png?v=1613072870" alt="Sierra Caladora Crown 710W">
+                <h3>Sierra Caladora Crown 710W</h3>
+                <p class="precio">S/. 293.90</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/products/CT15188-1_600x.png?v=1613069723" alt="Sierra Circular Crown 1500W">
+                <h3>Sierra Circular Crown 1500W</h3>
+                <p class="precio">S/. 319.90</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/products/GKS150_600x.png?v=1613166326" alt="Sierra Circular Bosch">
+                <h3>Sierra Circular Bosch 1500W</h3>
+                <p class="precio">S/. 479.90</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+
+            <div class="producto">
+                <img src="https://ferretec.pe/cdn/shop/products/DWE560-1_400x.png?v=1613401056" alt="Sierra Circular DeWALT">
+                <h3>Sierra Circular DeWALT 7 1/4" 1400W</h3>
+                <p class="precio">S/. 574.90</p>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- LÓGICA DEL CARRITO ---
+        const botones = document.querySelectorAll('.btn-add');
+        
+        botones.forEach(boton => {
+            boton.addEventListener('click', (e) => {
+                const card = e.target.parentElement;
+                const textoOriginal = card.querySelector('.precio').innerText;
+                
+                // Limpieza segura de precios (S/. y comas)
+                const precioLimpio = textoOriginal.replace('S/. ', '').replace(/,/g, '');
+
+                const producto = {
+                    nombre: card.querySelector('h3').innerText,
+                    precioTexto: textoOriginal,
+                    precioNum: parseFloat(precioLimpio),
+                    imagen: card.querySelector('img').src
+                };
+
+                let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+                carrito.push(producto);
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                
+                // Efecto visual
+                boton.innerText = "¡Agregado!";
+                setTimeout(() => boton.innerText = "Añadir al carrito", 1000);
+            });
+        });
+
+        // Evento para el icono del carrito
+        document.querySelector('.cart-icon').addEventListener('click', () => {
+            window.location.href = '../carrito.html';
+        });
+
+        // --- LÓGICA DE FILTRADO DE PRECIOS ---
+        const selectFiltro = document.getElementById('filtro-precio');
+        const contenedorProductos = document.querySelector('.productos');
+
+        if (selectFiltro && contenedorProductos) {
+            selectFiltro.addEventListener('change', () => {
+                const productosArray = Array.from(document.querySelectorAll('.producto'));
+                const opcion = selectFiltro.value;
+
+                productosArray.sort((a, b) => {
+                    const obtenerPrecio = (el) => {
+                        const texto = el.querySelector('.precio').innerText;
+                        // Limpieza segura de precios (S/. y comas)
+                        const textoLimpio = texto.replace('S/. ', '').replace(/,/g, '');
+                        return parseFloat(textoLimpio); 
+                    };
+
+                    const precioA = obtenerPrecio(a);
+                    const precioB = obtenerPrecio(b);
+
+                    if (opcion === 'min') {
+                        return precioA - precioB;
+                    } else if (opcion === 'max') {
+                        return precioB - precioA;
+                    }
+                    return 0;
+                });
+
+                productosArray.forEach(p => contenedorProductos.appendChild(p));
+            });
+        }
+    </script>
+</body>
+</html>
